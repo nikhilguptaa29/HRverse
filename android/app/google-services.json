@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "962831719512",
+    "project_id": "hrverse-a8dc5",
+    "storage_bucket": "hrverse-a8dc5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:962831719512:android:c647077465ee6fb94dbe2d",
+        "android_client_info": {
+          "package_name": "com.example.hrverse"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvhivRpG8i4sT9JDfA-bwLy6Lu20RQiJ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
