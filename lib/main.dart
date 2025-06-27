@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'HRverse',
       routes: {
-        '/':(context)=>
+        // '/':(context)=>
       },
       initialRoute: '/',
     );
