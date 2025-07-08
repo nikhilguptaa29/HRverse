@@ -41,6 +41,15 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+<string>This app needs access to your location to check attendance.</string>
+
+<key>NSLocationAlwaysUsageDescription</key>
+<string>This app uses your location to check attendance even in the background.</string>
+
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>We need your location to provide location-based check-in and check-out.</string>
+
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
