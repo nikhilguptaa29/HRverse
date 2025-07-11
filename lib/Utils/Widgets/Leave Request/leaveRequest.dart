@@ -39,7 +39,6 @@ class _LeaveRequestState extends State<LeaveRequest> {
   TextEditingController toDate = TextEditingController();
   TextEditingController totalLeaves = TextEditingController();
   TextEditingController remarksController = TextEditingController();
-  
 
   DateTime todayDate = DateTime.now();
 
@@ -64,7 +63,7 @@ class _LeaveRequestState extends State<LeaveRequest> {
     showCupertinoModalPopup(
       context: context,
       builder: (context) {
-        return Container(
+        return SizedBox(
           height: 200,
           child: CupertinoDatePicker(
             initialDateTime: todayDate,
@@ -84,7 +83,7 @@ class _LeaveRequestState extends State<LeaveRequest> {
     showCupertinoModalPopup(
       context: context,
       builder: (context) {
-        return Container(
+        return SizedBox(
           height: 200,
           child: CupertinoDatePicker(
             initialDateTime: todayDate,
@@ -120,7 +119,7 @@ class _LeaveRequestState extends State<LeaveRequest> {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Container(
+            child: SizedBox(
               width: width,
               // height: height,
               child: Form(
@@ -193,8 +192,8 @@ class _LeaveRequestState extends State<LeaveRequest> {
                       items:
                           leaveDuration.map((durationLeave) {
                             return DropdownMenuItem(
-                              child: Text(durationLeave),
                               value: durationLeave,
+                              child: Text(durationLeave),
                             );
                           }).toList(),
                       onChanged: (value) {
@@ -212,8 +211,8 @@ class _LeaveRequestState extends State<LeaveRequest> {
                       items:
                           reasonList.map((reasons) {
                             return DropdownMenuItem(
-                              child: Text(reasons),
                               value: reasons,
+                              child: Text(reasons),
                             );
                           }).toList(),
                       onChanged: (value) {
@@ -231,10 +230,15 @@ class _LeaveRequestState extends State<LeaveRequest> {
                       decoration: fieldDecoration(),
                     ),
                     SizedBox(height: 24),
-                    Center(child: Padding(
-                      padding: const EdgeInsets.only(bottom: 50.0),
-                      child: MyButton(btnTxt: 'Apply', func: () {}),
-                    )),
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          bottom:
+                              MediaQuery.of(context).viewInsets.bottom + 150,
+                        ),
+                        child: MyButton(btnTxt: 'Apply', func: () {}),
+                      ),
+                    ),
                     SizedBox(height: 30),
                   ],
                 ),

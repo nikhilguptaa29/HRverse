@@ -58,76 +58,81 @@ class _LoginPageState extends State<LoginPage> {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Padding(
-          padding: const EdgeInsets.only(top: 40.0),
-          child: Column(
-            children: [
-              Lottie.asset("Assets/Lottie/login1 2.json", height: 200),
-              SizedBox(height: 40),
-              Text(
-                "Login",
-                style: GoogleFonts.maitree(
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.w600,
+          padding: EdgeInsets.only(
+            top: ((MediaQuery.of(context).viewInsets.top) + 100),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Lottie.asset("Assets/Lottie/login1 2.json", height: 200),
+                SizedBox(height: 40),
+                Text(
+                  "Login",
+                  style: GoogleFonts.maitree(
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              SizedBox(height: 20),
-              MyTextForm(
-                hntTxt: 'Email Address',
-                lblTxt: "Email",
-                isPass: false,
-                controller: emailController,
-                type: TextInputType.emailAddress,
-                prefixIcon: Icon(Icons.email),
-              ),
-              // SizedBox(height: 20,),
-              MyTextForm(
-                hntTxt: "Password",
-                lblTxt: "Password",
-                isPass: true,
-                controller: passController,
-                type: TextInputType.text,
-                prefixIcon: Icon(Icons.lock),
-                suffixIcon: Icon(Icons.visibility),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 15,
-                  vertical: 12,
+                SizedBox(height: 20),
+                MyTextForm(
+                  hntTxt: 'Email Address',
+                  lblTxt: "Email",
+                  isPass: false,
+                  controller: emailController,
+                  type: TextInputType.emailAddress,
+                  prefixIcon: Icon(Icons.email),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      "Don't have an Account ?? ",
-                      style: GoogleFonts.roboto(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/signup');
-                      },
-                      child: Text(
-                        "Signup",
+                // SizedBox(height: 20,),
+                MyTextForm(
+                  hntTxt: "Password",
+                  lblTxt: "Password",
+                  isPass: true,
+                  controller: passController,
+                  type: TextInputType.text,
+                  prefixIcon: Icon(Icons.lock),
+                  suffixIcon: Icon(Icons.visibility),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 12,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        "Don't have an Account ?? ",
                         style: GoogleFonts.roboto(
                           fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.indigoAccent,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
                         ),
                       ),
-                    ),
-                  ],
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/signup');
+                        },
+                        child: Text(
+                          "Signup",
+                          style: GoogleFonts.roboto(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.indigoAccent,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              MyButton(
-                btnTxt: 'Login',
-                func: () {
-                  _login();
-                },
-              ),
-            ],
+                MyButton(
+                  btnTxt: 'Login',
+                  func: () {
+                    _login();
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

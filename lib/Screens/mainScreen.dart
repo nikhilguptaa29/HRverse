@@ -4,8 +4,9 @@ import 'package:hrverse/Screens/Auth/Dashboards/empDash.dart';
 import 'package:hrverse/Screens/Auth/Dashboards/managerDash.dart';
 import 'package:hrverse/Screens/Leave/employeeLeave.dart';
 import 'package:hrverse/Screens/Leave/managerLeave.dart';
-import 'package:hrverse/Screens/Leave/reportsPage.dart';
+// import 'package:hrverse/Screens/Leave/reportsPage.dart';
 import 'package:hrverse/Screens/profilePage.dart';
+import 'package:hrverse/Screens/reportsPage.dart';
 import 'package:hrverse/Screens/settingsPage.dart';
 import 'package:provider/provider.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
@@ -52,14 +53,17 @@ class _MainScreenState extends State<MainScreen> {
     ];
     return Scaffold(
       body: screens[index],
-      bottomNavigationBar: SalomonBottomBar(
-        items: items,
-        currentIndex: index,
-        onTap: (value) {
-          setState(() {
-            index = value;
-          });
-        },
+      bottomNavigationBar: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: SalomonBottomBar(
+          items: items,
+          currentIndex: index,
+          onTap: (value) {
+            setState(() {
+              index = value; 
+            });
+          },  
+        ),
       ),
     );
   }
