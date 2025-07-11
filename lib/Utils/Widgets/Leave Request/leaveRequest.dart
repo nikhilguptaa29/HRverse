@@ -5,7 +5,7 @@ import 'package:hrverse/Utils/Widgets/myButton.dart';
 import 'package:intl/intl.dart';
 
 class LeaveRequest extends StatefulWidget {
-  LeaveRequest({super.key});
+  const LeaveRequest({super.key});
 
   @override
   State<LeaveRequest> createState() => _LeaveRequestState();
@@ -22,7 +22,6 @@ class _LeaveRequestState extends State<LeaveRequest> {
   ];
 
   final List<String> leaveDuration = ['Full Day', 'Half Day'];
-
   final List<String> reasonList = [
     'Personal',
     'Travelling',
@@ -31,6 +30,7 @@ class _LeaveRequestState extends State<LeaveRequest> {
     'Medical Reason',
     'Others',
   ];
+
   String? selectLeaveDuration;
   String? selectLeave;
   String? selectReason;
@@ -39,8 +39,11 @@ class _LeaveRequestState extends State<LeaveRequest> {
   TextEditingController toDate = TextEditingController();
   TextEditingController totalLeaves = TextEditingController();
   TextEditingController remarksController = TextEditingController();
+  
+
   DateTime todayDate = DateTime.now();
-  final formatter = DateFormat('dd-mm-yyyy');
+
+  final formatter = DateFormat('dd-MM-yyyy');
 
   void calculateLeaves() {
     final dateFrom = formatter.parse(fromDate.text);
@@ -51,67 +54,59 @@ class _LeaveRequestState extends State<LeaveRequest> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    fromDate.text = DateFormat('dd-MM-yyyy').format(todayDate);
-    toDate.text = DateFormat('dd-MM-yyyy').format(todayDate);
+    fromDate.text = formatter.format(todayDate);
+    toDate.text = formatter.format(todayDate);
     calculateLeaves();
+  }
+
+  void fromdDatePicker() {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) {
+        return Container(
+          height: 200,
+          child: CupertinoDatePicker(
+            initialDateTime: todayDate,
+            backgroundColor: Colors.white,
+            mode: CupertinoDatePickerMode.date,
+            onDateTimeChanged: (DateTime newDate) {
+              fromDate.text = formatter.format(newDate);
+              calculateLeaves();
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void toDatePicker() {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) {
+        return Container(
+          height: 200,
+          child: CupertinoDatePicker(
+            initialDateTime: todayDate,
+            backgroundColor: Colors.white,
+            mode: CupertinoDatePickerMode.date,
+            onDateTimeChanged: (DateTime newDate) {
+              toDate.text = formatter.format(newDate);
+              calculateLeaves();
+            },
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.sizeOf(context).width;
     double height = MediaQuery.sizeOf(context).height;
-    void fromdDatePicker() {
-      showCupertinoModalPopup(
-        context: context,
-        builder: (context) {
-          return Container(
-            height: 200,
-            child: CupertinoDatePicker(
-              initialDateTime: todayDate,
-              backgroundColor: Colors.white,
-              // dateOrder: DatePickerDateOrder.dmy,
-              mode: CupertinoDatePickerMode.date,
-              onDateTimeChanged: (DateTime newDate) {
-                setState(() {
-                  todayDate = newDate;
-                  fromDate.text = DateFormat('dd-MM-yyyy').format(newDate);
-                  calculateLeaves();
-                });
-              },
-            ),
-          );
-        },
-      );
-    }
-
-    void toDatePicker() {
-      showCupertinoModalPopup(
-        context: context,
-        builder: (context) {
-          return Container(
-            height: 200,
-            child: CupertinoDatePicker(
-              initialDateTime: todayDate,
-              backgroundColor: Colors.white,
-              // dateOrder: DatePickerDateOrder.dmy,
-              mode: CupertinoDatePickerMode.date,
-              onDateTimeChanged: (DateTime newDate) {
-                setState(() {
-                  todayDate = newDate;
-                  toDate.text = DateFormat('dd-MM-yyyy').format(newDate);
-                  calculateLeaves();
-                });
-              },
-            ),
-          );
-        },
-      );
-    }
 
     return Padding(
-      padding: const EdgeInsets.only(left: 2.0, right: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Container(
         width: width,
         decoration: BoxDecoration(
@@ -122,328 +117,157 @@ class _LeaveRequestState extends State<LeaveRequest> {
           ),
           borderRadius: BorderRadius.only(topLeft: Radius.circular(20)),
         ),
-        child: Form(
-          child: ListView(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0, left: 25, bottom: 0),
-                child: Row(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Container(
+              width: width,
+              // height: height,
+              child: Form(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Leave Type",
-                      style: GoogleFonts.merriweather(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black87,
-                      ),
+                    Text("Leave Type", style: sectionHeading()),
+                    SizedBox(height: 8),
+                    DropdownButtonFormField(
+                      decoration: fieldDecoration(),
+                      dropdownColor: Colors.purple.shade50,
+                      hint: Text("Select Leave"),
+                      value: selectLeave,
+                      items:
+                          leaveType.map((leaves) {
+                            return DropdownMenuItem(
+                              value: leaves,
+                              child: Text(leaves),
+                            );
+                          }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectLeave = value!;
+                        });
+                      },
                     ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                child: DropdownButtonFormField(
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(),
+                    SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("From Date", style: sectionHeading()),
+                        Text("To Date", style: sectionHeading()),
+                      ],
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(),
-                    ),
-                    disabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(),
-                    ),
-                  ),
-                  dropdownColor: Colors.purple.shade50,
-                  hint: Text("Select Leave"),
-                  value: selectLeave,
-                  // menuMaxHeight: 175,
-                  items:
-                      leaveType.map((leaves) {
-                        return DropdownMenuItem(
-                          value: leaves,
-                          child: Text(leaves),
-                        );
-                      }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      selectLeave = value!;
-                    });
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0, left: 25, right: 115),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "From Date",
-                      style: GoogleFonts.merriweather(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Text(
-                      "To Date",
-                      style: GoogleFonts.merriweather(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 25, right: 10),
-                      child: TextFormField(
-                        readOnly: true,
-                        onTap: fromdDatePicker,
-                        controller: fromDate,
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(color: Colors.black),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(),
+                    SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            readOnly: true,
+                            onTap: fromdDatePicker,
+                            controller: fromDate,
+                            decoration: fieldDecoration(),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 15.0,
-                        vertical: 10,
-                      ),
-                      child: TextFormField(
-                        readOnly: true,
-                        onTap: toDatePicker,
-                        controller: toDate,
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: TextFormField(
+                            readOnly: true,
+                            onTap: toDatePicker,
+                            controller: toDate,
+                            decoration: fieldDecoration(),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0, left: 25),
-                child: Row(
-                  children: [
-                    Text(
-                      "No. of Leaves",
-                      style: GoogleFonts.merriweather(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black,
-                      ),
+                    SizedBox(height: 16),
+                    Text("No. of Leaves", style: sectionHeading()),
+                    SizedBox(height: 8),
+                    TextFormField(
+                      controller: totalLeaves,
+                      readOnly: true,
+                      decoration: fieldDecoration(),
                     ),
-                  ],
-                ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 25,
-                        vertical: 10,
-                      ),
-                      child: TextFormField(
-                        controller: totalLeaves,
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(color: Colors.black),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0, left: 25),
-                child: Row(
-                  children: [
-                    Text(
-                      "Full Day / Half Day",
-                      style: GoogleFonts.merriweather(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 25.0,
-                  vertical: 10,
-                ),
-                child: DropdownButtonFormField(
-                  items:
-                      leaveDuration
-                          .map(
-                            (durationLeave) => DropdownMenuItem(
+                    SizedBox(height: 16),
+                    Text("Full Day / Half Day", style: sectionHeading()),
+                    SizedBox(height: 8),
+                    DropdownButtonFormField(
+                      value: selectLeaveDuration,
+                      items:
+                          leaveDuration.map((durationLeave) {
+                            return DropdownMenuItem(
                               child: Text(durationLeave),
                               value: durationLeave,
-                            ),
-                          )
-                          .toList(),
-                  onChanged:
-                      (value) => setState(() {
-                        selectLeaveDuration = value;
-                      }),
-                  decoration: InputDecoration(
-                    hintText: 'Select Duration',
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(),
+                            );
+                          }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectLeaveDuration = value!;
+                        });
+                      },
+                      decoration: fieldDecoration(hint: 'Select Duration'),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(),
-                    ),
-                    disabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(),
-                    ),
-                  ),
-                  value: selectLeaveDuration,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0, left: 25),
-                child: Row(
-                  children: [
-                    Text(
-                      "Reason",
-                      style: GoogleFonts.merriweather(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 25.0,
-                  vertical: 10,
-                ),
-                child: DropdownButtonFormField(
-                  items:
-                      reasonList
-                          .map(
-                            (reasons) => DropdownMenuItem(
+                    SizedBox(height: 16),
+                    Text("Reason", style: sectionHeading()),
+                    SizedBox(height: 8),
+                    DropdownButtonFormField(
+                      value: selectReason,
+                      items:
+                          reasonList.map((reasons) {
+                            return DropdownMenuItem(
                               child: Text(reasons),
                               value: reasons,
-                            ),
-                          )
-                          .toList(),
-                  onChanged:
-                      (value) => setState(() {
-                        selectReason = value;
-                      }),
-                  decoration: InputDecoration(
-                    hintText: 'Select Reason',
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(),
+                            );
+                          }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectReason = value!;
+                        });
+                      },
+                      decoration: fieldDecoration(hint: 'Select Reason'),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(),
+                    SizedBox(height: 16),
+                    Text("Remarks", style: sectionHeading()),
+                    SizedBox(height: 8),
+                    TextFormField(
+                      controller: remarksController,
+                      decoration: fieldDecoration(),
                     ),
-                    disabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(),
-                    ),
-                  ),
-                  value: selectReason,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0, left: 25),
-                child: Row(
-                  children: [
-                    Text(
-                      "Remarks",
-                      style: GoogleFonts.merriweather(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black,
-                      ),
-                    ),
+                    SizedBox(height: 24),
+                    Center(child: Padding(
+                      padding: const EdgeInsets.only(bottom: 50.0),
+                      child: MyButton(btnTxt: 'Apply', func: () {}),
+                    )),
+                    SizedBox(height: 30),
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 25.0,
-                  vertical: 10,
-                ),
-                child: TextFormField(
-                  controller: remarksController,
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(),
-                    ),
-                    disabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(),
-                    ),
-                  ),
-                ),
-              ),
-              MyButton(btnTxt: 'Apply', func: () {}),
-            ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  TextStyle sectionHeading() {
+    return GoogleFonts.merriweather(
+      fontSize: 15,
+      fontWeight: FontWeight.w700,
+      color: Colors.black87,
+    );
+  }
+
+  InputDecoration fieldDecoration({String? hint}) {
+    return InputDecoration(
+      hintText: hint,
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15),
+        borderSide: BorderSide(),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15),
+        borderSide: BorderSide(),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15),
+        borderSide: BorderSide(),
       ),
     );
   }
