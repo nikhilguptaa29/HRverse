@@ -7,6 +7,16 @@ class Authservices {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Future<int?> countMale() async {
+    try {
+      AggregateQuerySnapshot snapshot =
+          await _firestore.collection('Employees').count().get();
+      return snapshot.count;
+    } catch (e) {
+      throw Exception("Error :$e");
+    }
+  }
+
   Future<User?> signIn(String email, String pass) async {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
@@ -15,7 +25,76 @@ class Authservices {
       );
       return result.user;
     } catch (e) {
-      throw Exception("User unle to sign in: $e");
+      throw Exception("User unable to sign in: $e");
+    }
+  }
+
+  // Future<> searchUser(String id) async{
+  //   try{
+  //     QuerySnapshot snapshot = await _firestore.collection("Employees").where("Emp Code",isEqualTo: id).get();
+
+  //     final List<Map<String,dynamic>> userData = [];
+
+  //     snapshot.docs.forEach((doc){
+  //       userData.add(doc.data() as Map<String,dynamic>);
+  //     });
+  //   }
+  // }
+  Future<bool> createEmployee(
+    String empId,
+    String name,
+    String email,
+    String role,
+    String gender,
+    String designation,
+    String manager,
+    String managerMail,
+    String dob,
+    String cl,
+    String pl,
+    String? sl,
+    String? compOff,
+  ) async {
+    try {
+      String? pass;
+      if (name.length >= 3) {
+        String char = name.substring(0, 3);
+        final year = dob.split('/').last.trim();
+        pass = '${char.toLowerCase()}$year';
+      }
+      UserCredential userCred = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: pass!,
+      );
+
+      // Create user with specified CL and PL in their account
+
+      await _firestore.collection('Employees').doc(empId).set({
+        "uid": userCred.user!.uid,
+        "Emp Code": empId,
+        "Name": name,
+        "Email": email,
+        "Pass":pass,
+        "Role": role,
+        "Date of Birth": dob,
+        "Reporting Manager": manager,
+        "Manager mail": managerMail,
+        "Created at": FieldValue.serverTimestamp(),
+        "Leaves": {
+          "Casual Leaves": cl,
+          "Paid Leave": pl,
+          "Sick Leave": sl,
+          "Comp Off": compOff,
+          "Leaves Count":
+              int.parse(cl) +
+              int.parse(pl) +
+              int.parse(sl!) +
+              int.parse(compOff!),
+        },
+      });
+      return true;
+    } catch (e) {
+      throw Exception("Error while creating the Employee");
     }
   }
 
