@@ -2,8 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hrverse/Provider/attendanceProvider.dart';
 import 'package:hrverse/Provider/authProvider.dart';
+import 'package:hrverse/Provider/dropdownProvider.dart';
+import 'package:hrverse/Provider/updateProvider.dart';
 import 'package:hrverse/Screens/Auth/Dashboards/empDash.dart';
-import 'package:hrverse/Screens/Auth/Dashboards/hrDash.dart';
+import 'package:hrverse/Screens/HR%20Dashboard/hrDash.dart';
 import 'package:hrverse/Screens/Auth/Dashboards/managerDash.dart';
 import 'package:hrverse/Screens/Auth/loginPage.dart';
 import 'package:hrverse/Screens/Auth/signupPage.dart';
@@ -19,6 +21,8 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => Authprovider()),
         ChangeNotifierProvider(create: (_) => AttendanceProvider()),
+        ChangeNotifierProvider(create: (_) => Dropdownprovider()),
+        ChangeNotifierProvider(create: (_) => Updateprovider()),
       ],
       child: MyApp(),
     ),
@@ -42,7 +46,7 @@ class MyApp extends StatelessWidget {
         '/main': (context) => MainScreen(),
         // '/':(context)=>
       },
-      initialRoute: '/login',
+      initialRoute: '/hr',
     );
   }
 }
