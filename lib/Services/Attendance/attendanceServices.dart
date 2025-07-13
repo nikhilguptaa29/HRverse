@@ -15,13 +15,13 @@ class AttendanceServices {
   // 28.47764880548407, 77.06065759105084
   Future<bool> isWithInRadius(Position position) async {
     print("User location: ${position.latitude}, ${position.longitude}");
-double distance = await Geolocator.distanceBetween(
-  position.latitude,
-  position.longitude,
-  lat,
-  long,
-);
-print("Distance from office: $distance meters");
+    double distance = await Geolocator.distanceBetween(
+      position.latitude,
+      position.longitude,
+      lat,
+      long,
+    );
+    print("Distance from office: $distance meters");
     return distance <= radius;
   }
 
@@ -70,11 +70,13 @@ print("Distance from office: $distance meters");
       await _firestore
           .collection("Daily Attendance")
           .doc(todayDate)
-          .collection(userName)
+          .collection("Attendance")
           .doc(userId)
           .set({
+            "Name": userName,
             "Check-In": {
               "Time": FieldValue.serverTimestamp(),
+              "Client Time": DateTime.now(),
               "Status": "Present",
               "Latitude": position.latitude,
               "Longitude": position.longitude,
@@ -99,11 +101,13 @@ print("Distance from office: $distance meters");
       await _firestore
           .collection("Daily Attendance")
           .doc(todayDate)
-          .collection(userName)
+          .collection("Attendance")
           .doc(userId)
           .set({
+            "Name": userName,
             "Check-Out": {
               "Time": FieldValue.serverTimestamp(),
+              "Client Time": DateTime.now(),
               "Status": "Present",
               "Latitude": position.latitude,
               "Longitude": position.longitude,
@@ -115,39 +119,34 @@ print("Distance from office: $distance meters");
     }
   }
 
-  Future<Map<String, String>> todayAttendance(
-    String userId,
-    String userName,
-  ) async {
+  Stream<Map<String, String>> todayAttendance(String userId) {
     {
       String todayDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
-      var doc = _firestore
+      return _firestore
           .collection("Daily Attendance")
           .doc(todayDate)
-          .collection(userName)
-          .doc(userId);
+          .collection("Attendance")
+          .doc(userId)
+          .snapshots()
+          .map((snap) {
+            String inTime = '--:--';
+            String outTime = '--:--';
 
-      var snapshot = await doc.get();
-
-      String checkInTime = '--:--';
-      String checkOutTime = '--:--';
-
-      if (snapshot.exists) {
-        var data = snapshot.data();
-        if (data?['Check-In'] != null) {
-          DateTime checkIn = (data!['Check-In'] ['Time'] as Timestamp).toDate();
-          checkInTime = DateFormat('HH:mm').format(checkIn);
-        }
-        if (data?['Check-Out'] != null) {
-          DateTime checkOut = (data!['Check-Out'] ['Time'] as Timestamp).toDate();
-          checkOutTime = DateFormat('HH:mm').format(checkOut);
-        }
-      }
-      return {
-        'Check-In': checkInTime,
-        'Check-Out': checkOutTime,
-        ' Date': todayDate,
-      };
+            if (snap.exists) {
+              final data = snap.data()!;
+              if (data['Check-In'] != null &&
+                  data['Check-In']['Time'] is Timestamp) {
+                final dt = (data['Check-In']['Time'] as Timestamp).toDate();
+                inTime = DateFormat.Hm().format(dt);
+              }
+              if (data['Check-Out'] != null &&
+                  data['Check-Out']['Time'] is Timestamp) {
+                final dt = (data['Check-Out']['Time'] as Timestamp).toDate();
+                outTime = DateFormat.Hm().format(dt);
+              }
+            }
+            return {'checkIn': inTime, 'checkOut': outTime};
+          });
     }
   }
 }

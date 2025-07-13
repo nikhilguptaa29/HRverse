@@ -24,6 +24,9 @@ class Authservices {
         password: pass,
       );
       return result.user;
+    } on FirebaseAuthException catch (e) {
+      print("Firebase Auth Error: ${e.code} - ${e.message}");
+      throw Exception("${e.code}: ${e.message}");
     } catch (e) {
       throw Exception("User unable to sign in: $e");
     }
@@ -56,7 +59,7 @@ class Authservices {
     String? compOff,
   ) async {
     try {
-      String? pass;
+      String pass = '';
       if (name.length >= 3) {
         String char = name.substring(0, 3);
         final year = dob.split('/').last.trim();
@@ -64,35 +67,44 @@ class Authservices {
       }
       UserCredential userCred = await _auth.createUserWithEmailAndPassword(
         email: email,
-        password: pass!,
+        password: pass,
       );
-
       // Create user with specified CL and PL in their account
+      final ref = await _firestore
+          .collection('Employees')
+          .doc(userCred.user!.uid);
 
-      await _firestore.collection('Employees').doc(empId).set({
+      await ref.collection('Basic Details').doc('Info').set({
         "uid": userCred.user!.uid,
-        "Emp Code": empId,
+        "empCode": empId,
         "Name": name,
         "Email": email,
-        "Pass":pass,
+        "Pass": pass,
         "Role": role,
         "Date of Birth": dob,
-        "Reporting Manager": manager,
-        "Manager mail": managerMail,
-        "Created at": FieldValue.serverTimestamp(),
-        "Leaves": {
-          "Casual Leaves": cl,
-          "Paid Leave": pl,
-          "Sick Leave": sl,
-          "Comp Off": compOff,
-          "Leaves Count":
-              int.parse(cl) +
-              int.parse(pl) +
-              int.parse(sl!) +
-              int.parse(compOff!),
-        },
+        "Gender":gender,
+      });
+
+      await ref.collection("Leave Details").doc("Summary").set({
+        "casualLeaves": cl,
+        "paidLeave": pl,
+        "sickLeave": sl,
+        "compOff": compOff,
+        "leavesCount":
+            int.parse(cl) +
+            int.parse(pl) +
+            int.parse(sl!) +
+            int.parse(compOff!),
+      });
+
+      await ref.collection("Reporting to").doc("Manager").set({
+        "reportingManager": manager,
+        "managerMail": managerMail,
       });
       return true;
+    } on FirebaseAuthException catch (e) {
+      print("Firebase Auth Error: ${e.code} - ${e.message}");
+      throw Exception("${e.code}: ${e.message}");
     } catch (e) {
       throw Exception("Error while creating the Employee");
     }
@@ -127,20 +139,67 @@ class Authservices {
 
   Future<String?> getUserRole(String userId) async {
     DocumentSnapshot snapshot =
-        await _firestore.collection("Employees").doc(userId).get();
+        await _firestore
+            .collection("Employees")
+            .doc(userId)
+            .collection("Basic Details")
+            .doc("Info")
+            .get();
+
     return snapshot.get("Role");
+  }
+
+  Future<String?> getManagerName(String userId) async {
+    DocumentSnapshot snapshot =
+        await _firestore
+            .collection("Employees")
+            .doc(userId)
+            .collection("Reporting to")
+            .doc("Manager")
+            .get();
+    return snapshot.get("reportingManager");
+  }
+
+  Future<String?> getManagerMail(String userId) async {
+    DocumentSnapshot snapshot =
+        await _firestore
+            .collection("Employees")
+            .doc(userId)
+            .collection("Reporting to")
+            .doc("Manager")
+            .get();
+    return snapshot.get("managerMail");
   }
 
   Future<String?> getUserName(String userId) async {
     DocumentSnapshot snapshot =
-        await _firestore.collection("Employees").doc(userId).get();
+        await _firestore
+            .collection("Employees")
+            .doc(userId)
+            .collection("Basic Details")
+            .doc("Info")
+            .get();
+
     return snapshot.get("Name");
   }
 
   Future<String?> getUserGender(String userId) async {
-    DocumentSnapshot snapshot =
-        await _firestore.collection("Employees").doc(userId).get();
-    return snapshot.get("Gender");
+    try {
+      DocumentSnapshot snapshot =
+          await _firestore
+              .collection("Employees")
+              .doc(userId)
+              .collection("Basic Details")
+              .doc("Info")
+              .get();
+
+      return snapshot.get("Gender");
+    } on FirebaseAuthException catch (e) {
+      print("Firebase Auth Error: ${e.code} - ${e.message}");
+      throw Exception("${e.code}: ${e.message}");
+    } catch (e) {
+      throw Exception("$e");
+    }
   }
 
   User? getCurrentUser() {

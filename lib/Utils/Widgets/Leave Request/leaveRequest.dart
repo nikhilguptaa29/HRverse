@@ -1,8 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hrverse/Provider/leaveProvider.dart';
+import 'package:hrverse/Services/Auth/authServices.dart';
 import 'package:hrverse/Utils/Widgets/myButton.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class LeaveRequest extends StatefulWidget {
   const LeaveRequest({super.key});
@@ -12,6 +16,36 @@ class LeaveRequest extends StatefulWidget {
 }
 
 class _LeaveRequestState extends State<LeaveRequest> {
+  void onApplyLeave(BuildContext context) async {
+    final Authservices _authservices = Authservices();
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final String? userId = _auth.currentUser?.uid;
+    final String? userName = await _authservices.getUserName(userId!);
+    final String? managerName = await _authservices.getManagerName(userId);
+    final String? managerMail = await _authservices.getManagerMail(userId);
+    final int? leaveCount = int.tryParse(totalLeaves.text);
+    final leaveProvider = await Provider.of<LeaveProvider>(context).applyLeave(
+      userId: userId,
+      userName: userName!,
+      managerName: managerName!,
+      managerMail: managerMail!,
+      leaveType: selectLeave!,
+      leaveCount: leaveCount!,
+    );
+
+    if (leaveProvider == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Leave Applied Successfully")));
+    }
+    else
+    {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("You are unable to apply Leave...")));
+    }
+  }
+
   final List<String> leaveType = [
     'Casual Leave',
     'Comp Off',

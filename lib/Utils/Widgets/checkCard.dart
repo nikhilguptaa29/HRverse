@@ -12,7 +12,7 @@ class CheckCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final attendanceProvider = Provider.of<AttendanceProvider>(
       context,
-      listen: false,
+      listen: true,
     );
     double width = MediaQuery.sizeOf(context).width;
     double height = MediaQuery.sizeOf(context).height;
@@ -50,15 +50,25 @@ class CheckCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 15.0, top: 40.0),
+                padding: const EdgeInsets.only(right: 15.0, top: 40.0, left: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("${attendanceProvider.date}"),
+                    Text(
+                      "${attendanceProvider.date}",
+                      style: GoogleFonts.merriweather(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     Text(
                       text == "Check In"
                           ? "${attendanceProvider.checkInTime}"
                           : "${attendanceProvider.checkOutTime}",
+                      style: GoogleFonts.merriweather(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),

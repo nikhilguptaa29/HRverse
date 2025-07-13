@@ -25,11 +25,8 @@ class _EmployeeDashState extends State<EmployeeDash> {
         context,
         listen: false,
       );
-
-      attendanceProvider.fetchDailyAttendance(
-        authProvider.user!.uid,
-        authProvider.name!,
-      );
+      final userId = authProvider.user!.uid;
+      attendanceProvider.start(userId);
     });
   }
 
@@ -93,7 +90,7 @@ class _EmployeeDashState extends State<EmployeeDash> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 18.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Row(
                         children: [
                           Expanded(
@@ -111,27 +108,35 @@ class _EmployeeDashState extends State<EmployeeDash> {
                       children: [
                         ElevatedButton(
                           onPressed: () async {
-  try {
-    bool result = await attendanceProvider.checkIn(
-      authProvider.user!.uid,
-      authProvider.name!,
-    );
+                            try {
+                              bool result = await attendanceProvider.checkIn(
+                                authProvider.user!.uid,
+                                authProvider.name!,
+                              );
 
-    if (result) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("✅ Check In successful")),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("❌ You are not in the office location")),
-      );
-    }
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("🔥 Error: ${e.toString()}")),
-    );
-  }
-},
+                              if (result) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("✅ Check In successful"),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      "❌ You are not in the office location",
+                                    ),
+                                  ),
+                                );
+                              }
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("🔥 Error: ${e.toString()}"),
+                                ),
+                              );
+                            }
+                          },
                           child: Text("Check In"),
                         ),
                       ],

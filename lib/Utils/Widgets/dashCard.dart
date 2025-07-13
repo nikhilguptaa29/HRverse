@@ -16,7 +16,7 @@ class DashCard extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: kToolbarHeight, left: 30),
       child: Container(
-        width: width / 7,
+        width: width / 5.5,
         height: height / 8,
         decoration: BoxDecoration(),
         child: Card(
