@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hrverse/Provider/attendanceProvider.dart';
 import 'package:hrverse/Provider/authProvider.dart';
 import 'package:hrverse/Screens/Auth/Dashboards/empDash.dart';
 import 'package:hrverse/Services/Attendance/attendanceServices.dart';
@@ -39,6 +40,9 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     if (result) {
+      final id = FirebaseAuth.instance.currentUser!.uid;
+
+      Provider.of<AttendanceProvider>(context, listen: false).start(id);
       final role = authProvider.role;
       if (role == "HR") {
         Navigator.pushNamed(context, '/hr');

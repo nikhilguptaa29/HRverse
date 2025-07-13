@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hrverse/Provider/attendanceProvider.dart';
 import 'package:hrverse/Provider/authProvider.dart';
 import 'package:hrverse/Services/Auth/authServices.dart';
 import 'package:hrverse/Utils/Widgets/dashCard.dart';
@@ -19,12 +20,16 @@ class _MainDashState extends State<MainDash> {
     super.initState();
     // userCount();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<Authprovider>(context,listen: false).userCount();
+      Provider.of<Authprovider>(context, listen: false).userCount();
+      Provider.of<AttendanceProvider>(
+        context,
+        listen: false,
+      ).dailyAttendanceCount();
     });
   }
 
-  int? _userCount;
-  bool _isLoading = false;
+  // int? _userCount;
+  // bool _isLoading = false;
 
   // Future<void> userCount() async {
   //   try {
@@ -45,6 +50,10 @@ class _MainDashState extends State<MainDash> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<Authprovider>(context, listen: true);
+    final attendanceProvider = Provider.of<AttendanceProvider>(
+      context,
+      listen: true,
+    );
     final Authservices authservices = Authservices();
     return Scaffold(
       body: Column(
@@ -52,7 +61,15 @@ class _MainDashState extends State<MainDash> {
         children: [
           Row(
             children: [
-              DashCard(text: 'Total Employees',data: '${authProvider.count}',)
+              DashCard(text: 'Total Employees', data: '${authProvider.count}'),
+              DashCard(
+                text: 'Total Employees Present',
+                data: '${attendanceProvider.presentCount}',
+              ),
+              DashCard(
+                text: 'Total Employees Absent',
+                data: '${attendanceProvider.absentCount}',
+              ),
             ],
           ),
         ],

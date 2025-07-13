@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hrverse/Provider/leaveProvider.dart';
+import 'package:hrverse/Services/Auth/authServices.dart';
 import 'package:hrverse/Utils/Widgets/Leave%20Request/leaveRequest.dart';
+import 'package:provider/provider.dart';
 
 class EmployeeLeave extends StatefulWidget {
   const EmployeeLeave({super.key});
@@ -20,6 +24,8 @@ class _EmployeeLeaveState extends State<EmployeeLeave>
     super.initState();
     _tabController = TabController(length: tabs.length, vsync: this);
   }
+
+
 
   @override
   Widget build(BuildContext context) {

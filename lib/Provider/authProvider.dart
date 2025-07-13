@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,7 @@ class Authprovider extends ChangeNotifier {
   int _count = 0;
   List<Map<String, dynamic>> _userData = [];
   bool _isUserDetailFetch = false;
+  StreamSubscription? _subscription;
 
   User? get user => _user;
   String? get role => _role;
@@ -23,6 +26,20 @@ class Authprovider extends ChangeNotifier {
   bool get isAuth => _user != null;
   bool get isUserDetailFetch => _isUserDetailFetch;
   List<Map<String, dynamic>> get userData => _userData;
+
+  void userCount() {
+    _subscription = _firestore.collection('Employees').snapshots().listen((
+      QuerySnapshot snapshot,
+    ) {
+      _count = snapshot.docs.length;
+      notifyListeners();
+    });
+  }
+
+  void stopSub() async {
+    await _subscription?.cancel();
+    _subscription = null;
+  }
 
   Future<void> userDetail(String id) async {
     try {
@@ -48,17 +65,36 @@ class Authprovider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> userCount() async {
+  Future<bool> deleteUser(String empId) async {
     try {
       final snapshot =
-          await FirebaseFirestore.instance.collection('Employees').get();
+          await _firestore
+              .collection("Employees")
+              .where("Emp Code", isEqualTo: empId)
+              .get();
 
-      _count = snapshot.docs.length;
-      notifyListeners();
+      for (var doc in snapshot.docs) {
+        await _firestore.collection("Employees").doc(doc.id).delete();
+        return true;
+      }
     } catch (e) {
-      print("Error : $e");
+      throw Exception("Failed to delete the user : $e");
     }
+    notifyListeners();
+    return false;
   }
+
+  // Future<void> userCount() async {
+  //   try {
+  //     final snapshot =
+  //         await FirebaseFirestore.instance.collection('Employees').get();
+
+  //     _count = snapshot.docs.length;
+  //     notifyListeners();
+  //   } catch (e) {
+  //     print("Error : $e");
+  //   }
+  // }
 
   Future<bool> signUp(
     String email,
@@ -98,5 +134,12 @@ class Authprovider extends ChangeNotifier {
     _name = null;
     _gender = null;
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    stopSub();
+    super.dispose();
   }
 }

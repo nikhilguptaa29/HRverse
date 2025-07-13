@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hrverse/Screens/HR%20Dashboard/Employee%20Detail%20Screens/addEmployee.dart';
+import 'package:hrverse/Screens/HR%20Dashboard/Employee%20Detail%20Screens/deleteEmployee.dart';
 import 'package:hrverse/Screens/HR%20Dashboard/Employee%20Detail%20Screens/emloyeeDetails.dart';
 import 'package:hrverse/Screens/HR%20Dashboard/Dashboard%20Screens/mainDashboard.dart';
 import 'package:hrverse/Screens/HR%20Dashboard/Dashboard%20Screens/reportDetail.dart';
@@ -22,7 +23,11 @@ class _HrDashState extends State<HrDash> {
   int? isEmployee;
 
   final List<Widget> pages = [MainDash(), SizedBox(), ReportDetail()];
-  final List<Widget> employeePages = [AddEmployee(), UpdateEmployee()];
+  final List<Widget> employeePages = [
+    AddEmployee(),
+    UpdateEmployee(),
+    DeleteEmployee(),
+  ];
 
   void _toggleRail() {
     setState(() {
@@ -127,9 +132,14 @@ class _HrDashState extends State<HrDash> {
             if (index == 1) ...[
               NavigationRail(
                 extended: isExpanded,
+                unselectedIconTheme: IconThemeData(
+                  color: Colors.white54,
+                  opacity: 1,
+                ),
                 backgroundColor: Colors.blue.shade300,
                 destinations: [
                   NavigationRailDestination(
+                    // selectedIcon: Icon(Icons.person_add_alt_1_outlined),
                     icon: Icon(Icons.person_add_alt_1_rounded),
                     label: Text(
                       'Add Employee',
@@ -141,7 +151,7 @@ class _HrDashState extends State<HrDash> {
                     ),
                   ),
                   NavigationRailDestination(
-                    icon: Icon(Icons.person_pin),
+                    icon: Icon(Icons.edit),
                     label: Text(
                       'Update Employee',
                       style: GoogleFonts.merriweather(
@@ -152,9 +162,9 @@ class _HrDashState extends State<HrDash> {
                     ),
                   ),
                   NavigationRailDestination(
-                    icon: Icon(Icons.person_add_alt_1_rounded),
+                    icon: Icon(Icons.person_remove_alt_1_sharp),
                     label: Text(
-                      'Add Employee',
+                      'Remove Employee',
                       style: GoogleFonts.merriweather(
                         fontSize: 16,
                         color: Colors.white,
