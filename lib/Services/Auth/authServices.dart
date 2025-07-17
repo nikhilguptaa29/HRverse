@@ -69,7 +69,7 @@ class Authservices {
         email: email,
         password: pass,
       );
-      // Create user with specified CL and PL in their account
+      // Create user with specified CL and PL in their account to calculate the leaveCount
       final ref = _firestore
           .collection('Employees')
           .doc(userCred.user!.uid)
