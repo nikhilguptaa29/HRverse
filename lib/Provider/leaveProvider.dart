@@ -6,6 +6,14 @@ class LeaveProvider extends ChangeNotifier {
   LeaveModel? _leaveModel;
 
   LeaveModel? get leaveModel => _leaveModel;
+   Map<String, String> _leaveFieldMap = {
+  'Casual Leave'     : 'casualLeaves',
+  'PL'               : 'paidLeave',
+  'Sick Leave'       : 'sickLeave',
+  'Comp Off'         : 'compOff',
+  // 'Leave Without Pay': 'leaveWithoutPay', // add if needed
+  // 'PL-Reserved'      : 'plReserved',      // add if needed
+};
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Future<void> fetchLeaveBalance(String userId) async {
     final doc =
@@ -13,7 +21,7 @@ class LeaveProvider extends ChangeNotifier {
             .collection("Employees")
             .doc(userId)
             .collection("Leave Details")
-            .doc("Sumamry")
+            .doc("Summary")
             .get();
 
     if (doc.exists) {
@@ -32,19 +40,20 @@ class LeaveProvider extends ChangeNotifier {
   }) async {
     try {
       // Fetch Current leave balance or count
-
+      
       final doc =
           await _firestore
-              .collection("Employee")
+              .collection("Employees")
               .doc(userId)
               .collection("Leave Details")
               .doc("Summary")
               .get();
       final data = doc.data();
+      final mapLeave = _leaveFieldMap[leaveType];
 
-      if (data == null || data[leaveType] == null) return 'Invalid Leave Type';
+      if (data == null) return 'Leave Summary not found';
 
-      int currentBalance = data[leaveType];
+      int currentBalance = data[mapLeave];
 
       //Check if leaves are enough
 

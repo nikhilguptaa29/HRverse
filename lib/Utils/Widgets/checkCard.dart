@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hrverse/Provider/attendanceProvider.dart';
 import 'package:provider/provider.dart';
@@ -16,64 +17,74 @@ class CheckCard extends StatelessWidget {
     );
     double width = MediaQuery.sizeOf(context).width;
     double height = MediaQuery.sizeOf(context).height;
-    return Container(
-      width: width / 2,
-      height: height / 7,
-      decoration: BoxDecoration(),
-      child: Card(
-        elevation: 5,
-        shadowColor: Colors.black45,
-        color: Colors.transparent,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: Colors.blue, width: 1.5),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            // mainAxisAlignment:
-            //     MainAxisAlignment.spaceAround,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 5, left: 5),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      text,
-                      style: GoogleFonts.poppins(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
+    return Padding(
+      padding: EdgeInsets.only(bottom: 8.h,left: 2.5.w),
+      child: Container(
+        width: 0.48.sw,
+        height: 0.17.sh,
+        decoration: BoxDecoration(),
+        child: Card(
+          margin: EdgeInsets.only(left: 5.w, top: 20.w),
+          elevation: 8,
+          shape: BeveledRectangleBorder(),
+          shadowColor: Colors.black,
+          color: Colors.transparent,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              // border: Border.all(color: Colors.blue, width: 1.5),
+              borderRadius: BorderRadius.circular(10.r),
+              border: Border.all(width: 2.5.w, color: Colors.blue),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 8.h, left: 5.w),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        text,
+                        style: GoogleFonts.poppins(
+                          fontSize: (18.sp),
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 15.0, top: 40.0, left: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "${attendanceProvider.date}",
-                      style: GoogleFonts.merriweather(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
+                Padding(
+                  padding: EdgeInsets.only(
+                    right: 8.0.w,
+                    top: 30.0.h,
+                    left: 4.w,
+                    bottom: 10.h,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        attendanceProvider.date,
+                        style: GoogleFonts.merriweather(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                    Text(
-                      text == "Check In"
-                          ? "${attendanceProvider.checkInTime}"
-                          : "${attendanceProvider.checkOutTime}",
-                      style: GoogleFonts.merriweather(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
+                      Text(
+                        text == "Check In"
+                            ? attendanceProvider.checkInTime
+                            : attendanceProvider.checkOutTime,
+                        style: GoogleFonts.merriweather(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hrverse/Provider/attendanceProvider.dart';
 import 'package:hrverse/Provider/authProvider.dart';
-import 'package:hrverse/Screens/Auth/Dashboards/empDash.dart';
+import 'package:hrverse/Dashboards/empDash.dart';
 import 'package:hrverse/Services/Attendance/attendanceServices.dart';
 import 'package:hrverse/Services/Auth/authServices.dart';
 import 'package:hrverse/Utils/Widgets/myButton.dart';
