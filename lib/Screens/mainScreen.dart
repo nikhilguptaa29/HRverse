@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hrverse/Provider/authProvider.dart';
-import 'package:hrverse/Screens/Auth/Dashboards/empDash.dart';
-import 'package:hrverse/Screens/Auth/Dashboards/managerDash.dart';
+import 'package:hrverse/Dashboards/empDash.dart';
+import 'package:hrverse/Dashboards/managerDash.dart';
 import 'package:hrverse/Screens/Leave/employeeLeave.dart';
 import 'package:hrverse/Screens/Leave/managerLeave.dart';
 // import 'package:hrverse/Screens/Leave/reportsPage.dart';
