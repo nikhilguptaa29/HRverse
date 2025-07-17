@@ -70,37 +70,31 @@ class Authservices {
         password: pass,
       );
       // Create user with specified CL and PL in their account
-      final ref = await _firestore
+      final ref = _firestore
           .collection('Employees')
-          .doc(userCred.user!.uid);
+          .doc(userCred.user!.uid)
+          .set({
+            "uid": userCred.user!.uid,
+            "empCode": empId,
+            "Name": name,
+            "Email": email,
+            "Pass": pass,
+            "Role": role,
+            "Date of Birth": dob,
+            "Gender": gender,
+            "reportingManager": manager,
+            "managerMail": managerMail,
+            "casualLeaves": int.parse(cl),
+            "paidLeave": int.parse(pl),
+            "sickLeave": int.parse(sl!),
+            "compOff": int.parse(compOff!),
+            "leavesCount":
+                int.parse(cl) +
+                int.parse(pl) +
+                int.parse(sl) +
+                int.parse(compOff),
+          });
 
-      await ref.collection('Basic Details').doc('Info').set({
-        "uid": userCred.user!.uid,
-        "empCode": empId,
-        "Name": name,
-        "Email": email,
-        "Pass": pass,
-        "Role": role,
-        "Date of Birth": dob,
-        "Gender":gender,
-      });
-
-      await ref.collection("Leave Details").doc("Summary").set({
-        "casualLeaves": cl,
-        "paidLeave": pl,
-        "sickLeave": sl,
-        "compOff": compOff,
-        "leavesCount":
-            int.parse(cl) +
-            int.parse(pl) +
-            int.parse(sl!) +
-            int.parse(compOff!),
-      });
-
-      await ref.collection("Reporting to").doc("Manager").set({
-        "reportingManager": manager,
-        "managerMail": managerMail,
-      });
       return true;
     } on FirebaseAuthException catch (e) {
       print("Firebase Auth Error: ${e.code} - ${e.message}");
@@ -141,9 +135,7 @@ class Authservices {
     DocumentSnapshot snapshot =
         await _firestore
             .collection("Employees")
-            .doc(userId)
-            .collection("Basic Details")
-            .doc("Info")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
             .get();
 
     return snapshot.get("Role");
@@ -153,9 +145,7 @@ class Authservices {
     DocumentSnapshot snapshot =
         await _firestore
             .collection("Employees")
-            .doc(userId)
-            .collection("Reporting to")
-            .doc("Manager")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
             .get();
     return snapshot.get("reportingManager");
   }
@@ -164,9 +154,7 @@ class Authservices {
     DocumentSnapshot snapshot =
         await _firestore
             .collection("Employees")
-            .doc(userId)
-            .collection("Reporting to")
-            .doc("Manager")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
             .get();
     return snapshot.get("managerMail");
   }
@@ -175,9 +163,7 @@ class Authservices {
     DocumentSnapshot snapshot =
         await _firestore
             .collection("Employees")
-            .doc(userId)
-            .collection("Basic Details")
-            .doc("Info")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
             .get();
 
     return snapshot.get("Name");
@@ -188,9 +174,7 @@ class Authservices {
       DocumentSnapshot snapshot =
           await _firestore
               .collection("Employees")
-              .doc(userId)
-              .collection("Basic Details")
-              .doc("Info")
+              .doc(FirebaseAuth.instance.currentUser!.uid)
               .get();
 
       return snapshot.get("Gender");
