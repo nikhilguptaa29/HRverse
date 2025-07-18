@@ -1,28 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MyButton extends StatelessWidget {
   final String btnTxt;
   final Function()? func;
-  final Color btnColor = Colors.blue;
+  Color btnColor = Colors.blue.shade800;
   final Color txtColor = Colors.white;
-  const MyButton({super.key, required this.btnTxt, this.func});
+  MyButton({super.key, required this.btnTxt, this.func});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: EdgeInsets.symmetric(vertical: 5.w),
       child: ElevatedButton(
-        child: Text(btnTxt),
         onPressed: func,
         style: ButtonStyle(
-          padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 40,vertical: 10)),
+          padding: WidgetStatePropertyAll(
+            EdgeInsets.symmetric(horizontal: 40.w, vertical: 8.h),
+          ),
           backgroundColor: WidgetStatePropertyAll(btnColor),
-          elevation: WidgetStatePropertyAll(5),
+          elevation: WidgetStatePropertyAll(8.r),
           foregroundColor: WidgetStatePropertyAll(txtColor),
           shape: WidgetStatePropertyAll(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(40.r)),
           ),
         ),
+        child: Text(btnTxt, style: GoogleFonts.merriweather(fontSize: 16.sp)),
       ),
     );
   }
