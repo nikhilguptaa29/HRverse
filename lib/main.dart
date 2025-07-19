@@ -5,6 +5,7 @@ import 'package:hrverse/Provider/attendanceProvider.dart';
 import 'package:hrverse/Provider/authProvider.dart';
 import 'package:hrverse/Provider/dropdownProvider.dart';
 import 'package:hrverse/Provider/leaveProvider.dart';
+import 'package:hrverse/Provider/timerProvider.dart';
 import 'package:hrverse/Provider/updateProvider.dart';
 import 'package:hrverse/Dashboards/empDash.dart';
 import 'package:hrverse/Screens/HR%20Dashboard/hrDash.dart';
@@ -26,6 +27,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => Dropdownprovider()),
         ChangeNotifierProvider(create: (_) => Updateprovider()),
         ChangeNotifierProvider(create: (_) => LeaveProvider()),
+        ChangeNotifierProvider(create: (_) => Timerprovider()),
       ],
       child: MyApp(),
     ),
@@ -55,7 +57,7 @@ class MyApp extends StatelessWidget {
             '/main': (context) => MainScreen(),
             // '/':(context)=>
           },
-          initialRoute: '/mngr',
+          initialRoute: '/login',
         );
       },
     );

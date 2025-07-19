@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hrverse/Provider/leaveProvider.dart';
 import 'package:hrverse/Services/Auth/authServices.dart';
@@ -25,8 +26,6 @@ class _EmployeeLeaveState extends State<EmployeeLeave>
     _tabController = TabController(length: tabs.length, vsync: this);
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.sizeOf(context).width;
@@ -37,18 +36,18 @@ class _EmployeeLeaveState extends State<EmployeeLeave>
         body: Stack(
           children: [
             Container(
-              width: width,
-              height: height,
-              decoration: BoxDecoration(color: Colors.grey.shade200),
+              width: 1.sw,
+              height: 1.sh,
+              decoration: BoxDecoration(color: Colors.white24),
             ),
             Container(
-              width: width,
-              height: height / 9.5,
+              width: 1.sw,
+              height: 0.1.sh,
               decoration: BoxDecoration(
-                color: Colors.indigo.shade300,
+                color: Colors.blue.shade800,
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(40),
-                  bottomRight: Radius.circular(40),
+                  bottomLeft: Radius.circular(40.r),
+                  bottomRight: Radius.circular(40.r),
                 ),
               ),
               child: Column(
@@ -57,8 +56,8 @@ class _EmployeeLeaveState extends State<EmployeeLeave>
                   Text(
                     "Leaves",
                     style: GoogleFonts.merriweather(
-                      fontSize: 40,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 30.sp,
+                      fontWeight: FontWeight.w800,
                       color: Colors.white,
                     ),
                   ),
@@ -66,37 +65,39 @@ class _EmployeeLeaveState extends State<EmployeeLeave>
               ),
             ),
             Positioned(
-              top: height / 9,
-              left: 2,
-              right: 2,
+              top: 0.115.sh,
+              left: 5.w,
+              right: 5.w,
               child: Container(
-                width: width,
-                height: height,
+                width: 1.sw,
+                height: 1.sh,
                 decoration: BoxDecoration(
                   // color: Colors.red,
-                  border: Border.all(color: Colors.black26, width: 2),
+                  border: Border.all(color: Colors.black26, width: 1.2.w),
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
+                    topLeft: Radius.circular(20.r),
+                    topRight: Radius.circular(20.r),
                   ),
                 ),
                 child: Column(
                   children: [
                     Card(
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.indigo.shade200,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             TabBar(
+                              dividerColor: Colors.transparent,
+                              dividerHeight: 5.h,
                               labelStyle: GoogleFonts.merriweather(
-                                fontSize: 15,
+                                fontSize: 16.sp,
                                 fontWeight: FontWeight.w600,
                               ),
                               tabs: tabs,
@@ -104,10 +105,11 @@ class _EmployeeLeaveState extends State<EmployeeLeave>
                               controller: _tabController,
                               labelColor: Colors.white,
                               isScrollable: true,
-                              indicatorPadding: EdgeInsets.only(left: 10),
+                              indicatorPadding: EdgeInsets.only(left: 5.w),
                               tabAlignment: TabAlignment.center,
                               // labelPadding: EdgeInsets.only(top: 10, left: 15),
-                              indicator: BoxDecoration(),
+                              indicator: BoxDecoration(
+                              ),
                               indicatorColor: Colors.black,
                               // unselectedLabelColor: Colors.red,
                             ),

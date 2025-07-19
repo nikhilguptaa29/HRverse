@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MyTextForm extends StatelessWidget {
   final String hntTxt;
@@ -23,7 +24,7 @@ class MyTextForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 45.w, vertical: 8.h),
       child: TextFormField(
         controller: controller,
         obscureText: isPass,
@@ -34,20 +35,20 @@ class MyTextForm extends StatelessWidget {
           prefixIcon: prefixIcon,
           suffixIcon: suffixIcon,
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(rad)),
-            borderSide: BorderSide(color: Colors.blue, width: 1.5),
+            borderRadius: BorderRadius.all(Radius.circular(rad.r)),
+            borderSide: BorderSide(color: Colors.blue, width: 1.5.w),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(rad)),
-            borderSide: BorderSide(color: Colors.blue, width: 1.5),
+            borderRadius: BorderRadius.all(Radius.circular(rad.r)),
+            borderSide: BorderSide(color: Colors.blue, width: 1.5.w),
           ),
           disabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(rad)),
-            borderSide: BorderSide(color: Colors.blue, width: 1.5),
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(rad.r)),
+            borderSide: BorderSide(color: Colors.blue, width: 1.5.w),
           ),
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(rad)),
-            borderSide: BorderSide(color: Colors.red, width: 1.5),
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(rad.r)),
+            borderSide: BorderSide(color: Colors.red, width: 1.5.w),
           ),
         ),
       ),
