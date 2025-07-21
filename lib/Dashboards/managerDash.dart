@@ -100,87 +100,87 @@ class _ManagerDashState extends State<ManagerDash> {
                     isFinished: isFinished,
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10.0.h, right: 10.w, left: 5.w),
-                  child: Container(
-                    width: 0.98.sw,
-                    height: 0.489.sh,
-                    decoration: BoxDecoration(
-                      color: Colors.blue.shade50,
-                      borderRadius: BorderRadius.circular(25.r),
-                      border: Border.all(color: Colors.indigo),
-                    ),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(25.r),
-                                topRight: Radius.circular(25.r),
-                              ),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  height: 50.h,
-                                  child: Marquee(
-                                    text: "This is a scrolling text",
-                                    style: GoogleFonts.meeraInimai(
-                                      fontSize: 18.sp,
-                                      color: Colors.white,
-                                    ),
-                                    scrollAxis: Axis.horizontal,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    blankSpace: 40.0,
-                                    velocity: 100.0,
-                                    pauseAfterRound: Duration.zero,
-                                    startPadding: 10.0,
-                                    accelerationDuration: Duration.zero,
-                                    accelerationCurve: Curves.linear,
-                                    decelerationDuration: Duration.zero,
-                                    decelerationCurve: Curves.easeOut,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 15.h,
-                                  child: Marquee(
-                                    text: "Scroller",
-                                    style: GoogleFonts.meeraInimai(
-                                      fontSize: 18.sp,
-                                      color: Colors.white,
-                                    ),
-                                    scrollAxis: Axis.horizontal,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    blankSpace: 40.0,
-                                    velocity: 100.0,
-                                    pauseAfterRound: Duration.zero,
-                                    startPadding: 10.0,
-                                    accelerationDuration: Duration.zero,
-                                    accelerationCurve: Curves.linear,
-                                    decelerationDuration: Duration.zero,
-                                    decelerationCurve: Curves.easeOut,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            decoration: BoxDecoration(color: Colors.yellow),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                // Padding(
+                //   padding: EdgeInsets.only(top: 10.0.h, right: 10.w, left: 5.w),
+                //   child: Container(
+                //     width: 0.98.sw,
+                //     height: 0.489.sh,
+                //     decoration: BoxDecoration(
+                //       color: Colors.blue.shade50,
+                //       borderRadius: BorderRadius.circular(25.r),
+                //       border: Border.all(color: Colors.indigo),
+                //     ),
+                //     child: Column(
+                //       children: [
+                //         Expanded(
+                //           flex: 2,
+                //           child: Container(
+                //             decoration: BoxDecoration(
+                //               color: Colors.red,
+                //               borderRadius: BorderRadius.only(
+                //                 topLeft: Radius.circular(25.r),
+                //                 topRight: Radius.circular(25.r),
+                //               ),
+                //             ),
+                //             child: Column(
+                //               mainAxisAlignment: MainAxisAlignment.center,
+                //               children: [
+                //                 SizedBox(
+                //                   height: 50.h,
+                //                   child: Marquee(
+                //                     text: "This is a scrolling text",
+                //                     style: GoogleFonts.meeraInimai(
+                //                       fontSize: 18.sp,
+                //                       color: Colors.white,
+                //                     ),
+                //                     scrollAxis: Axis.horizontal,
+                //                     crossAxisAlignment:
+                //                         CrossAxisAlignment.center,
+                //                     blankSpace: 40.0,
+                //                     velocity: 100.0,
+                //                     pauseAfterRound: Duration.zero,
+                //                     startPadding: 10.0,
+                //                     accelerationDuration: Duration.zero,
+                //                     accelerationCurve: Curves.linear,
+                //                     decelerationDuration: Duration.zero,
+                //                     decelerationCurve: Curves.easeOut,
+                //                   ),
+                //                 ),
+                //                 SizedBox(
+                //                   height: 15.h,
+                //                   child: Marquee(
+                //                     text: "Scroller",
+                //                     style: GoogleFonts.meeraInimai(
+                //                       fontSize: 18.sp,
+                //                       color: Colors.white,
+                //                     ),
+                //                     scrollAxis: Axis.horizontal,
+                //                     crossAxisAlignment:
+                //                         CrossAxisAlignment.center,
+                //                     blankSpace: 40.0,
+                //                     velocity: 100.0,
+                //                     pauseAfterRound: Duration.zero,
+                //                     startPadding: 10.0,
+                //                     accelerationDuration: Duration.zero,
+                //                     accelerationCurve: Curves.linear,
+                //                     decelerationDuration: Duration.zero,
+                //                     decelerationCurve: Curves.easeOut,
+                //                   ),
+                //                 ),
+                //               ],
+                //             ),
+                //           ),
+                //         ),
+                //         Expanded(
+                //           flex: 3,
+                //           child: Container(
+                //             decoration: BoxDecoration(color: Colors.yellow),
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
