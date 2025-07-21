@@ -20,6 +20,7 @@ class _AddEmployeeState extends State<AddEmployee> {
   TextEditingController designationController = TextEditingController();
   TextEditingController managerController = TextEditingController();
   TextEditingController managermailController = TextEditingController();
+  TextEditingController managerIdController = TextEditingController();
   TextEditingController dobController = TextEditingController();
   TextEditingController plController = TextEditingController();
   TextEditingController clController = TextEditingController();
@@ -40,6 +41,7 @@ class _AddEmployeeState extends State<AddEmployee> {
       designationController.text,
       managerController.text,
       managermailController.text,
+      managerIdController.text,
       dobController.text,
       clController.text,
       plController.text,
@@ -141,6 +143,13 @@ class _AddEmployeeState extends State<AddEmployee> {
                           isPass: false,
                           controller: dobController,
                           type: TextInputType.datetime,
+                        ),
+                        EmpTextForm(
+                          hntTxt: "Manager Id",
+                          lblTxt: 'Manager Id',
+                          isPass: false,
+                          controller: managerIdController,
+                          type: TextInputType.number,
                         ),
                         EmpTextForm(
                           hntTxt: "Reporting Manager",

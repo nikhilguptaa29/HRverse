@@ -72,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Container(
               width: 1.sw,
-              height: 0.24.sh,
+              height: 0.14.sh,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [Colors.blue.shade800, Colors.indigo.shade400],
@@ -80,8 +80,8 @@ class _LoginPageState extends State<LoginPage> {
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(35.r),
-                  bottomRight: Radius.circular(35.r),
+                  bottomLeft: Radius.circular(25.r),
+                  bottomRight: Radius.circular(25.r),
                 ),
               ),
               child: Align(
@@ -99,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             Positioned(
-              top: 240.h,
+              top: 180.h,
               left: 35.w,
               child: Container(
                 width: 0.8.sw,

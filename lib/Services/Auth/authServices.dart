@@ -52,6 +52,7 @@ class Authservices {
     String designation,
     String manager,
     String managerMail,
+    String managerId,
     String dob,
     String cl,
     String pl,
@@ -80,10 +81,12 @@ class Authservices {
             "Email": email,
             "Pass": pass,
             "Role": role,
+            "Designation":designation,
             "Date of Birth": dob,
             "Gender": gender,
             "reportingManager": manager,
             "managerMail": managerMail,
+            "managerId": managerId,
             "casualLeaves": int.parse(cl),
             "paidLeave": int.parse(pl),
             "sickLeave": int.parse(sl!),
@@ -139,6 +142,15 @@ class Authservices {
             .get();
 
     return snapshot.get("Role");
+  }
+  Future<String?> getUserDesignation(String userId) async {
+    DocumentSnapshot snapshot =
+        await _firestore
+            .collection("Employees")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .get();
+
+    return snapshot.get("Designation");
   }
 
   Future<String?> getManagerName(String userId) async {

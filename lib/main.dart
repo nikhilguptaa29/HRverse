@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(scaffoldBackgroundColor: Colors.indigo.shade50,),
+          theme: ThemeData(scaffoldBackgroundColor: Colors.indigo.shade50),
           title: 'HRverse',
           routes: {
             '/login': (context) => LoginPage(),

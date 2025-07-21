@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hrverse/Provider/leaveProvider.dart';
 import 'package:hrverse/Services/Auth/authServices.dart';
-import 'package:hrverse/Utils/Widgets/Leave%20Request/leaveRequest.dart';
+import 'package:hrverse/Utils/Widgets/Leave%20Helper/leaveRequest.dart';
 import 'package:provider/provider.dart';
 
 class EmployeeLeave extends StatefulWidget {

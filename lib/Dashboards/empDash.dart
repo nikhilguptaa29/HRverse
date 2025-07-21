@@ -100,7 +100,7 @@ class _EmployeeDashState extends State<EmployeeDash> {
                     child: Row(
                       children: [
                         Text(
-                          "${authProvider.role} ",
+                          "${authProvider.designation} ",
                           style: GoogleFonts.roboto(
                             fontSize: 20.sp,
                             fontWeight: FontWeight.w500,
@@ -129,29 +129,24 @@ class _EmployeeDashState extends State<EmployeeDash> {
                       builder: (ctx, timerProv, _) {
                         if (!timerProv.isStart) {
                           return ElevatedButton(
-                            onPressed: () {
-                              timerProv.setTimer();
+                            onPressed: () async {
+                              bool check = await authProvider.biometricAuth();
+                              if (check) {
+                                timerProv.setTimer();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("Check-In Successfully"),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Unable to Check-In")),
+                                );
+                              }
                             },
                             child: Text("Check In"),
                           );
-                          // return SizedBox(
-                          //   width: 0.6.sw,
-                          //   height: 0.07.sh,
-                          //   child: SwipeableButtonView(
-                          //     onFinish: () {
-                          //       timerProv.setTimer;
-                          //     },
-                          //     onWaitingProcess: () {},
-                          //     activeColor: Colors.blueAccent.shade400,
-                          //     buttonWidget: Icon(Icons.login),
-                          //     buttonText: "Check In",
-                          //     buttontextstyle: TextStyle(
-                          //       fontSize: 22.sp,
-                          //       fontWeight: FontWeight.w400,
-                          //       color: Colors.white,
-                          //     ),
-                          //   ),
-                          // );
+                        
                         } else if (timerProv.showButton) {
                           return ElevatedButton(
                             onPressed: () {
@@ -209,109 +204,6 @@ class _EmployeeDashState extends State<EmployeeDash> {
             ),
           ],
         ),
-        // child: SingleChildScrollView(
-        //   child: Column(
-        //     children: [
-        //       Container(
-        //         width: 1.sw,
-        //         height: 1.sh,
-        //         decoration: BoxDecoration(),
-        //         child: Column(
-        //           mainAxisAlignment: MainAxisAlignment.start,
-        //           children: [
-        //             Padding(
-        //               padding: EdgeInsets.only(
-        //                 top: 10.h,
-        //                 left: 15.0.w,
-        //                 right: 15.w,
-        //               ),
-        //               child: Row(
-        //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //                 children: [
-        //                   Text(
-        //                     "Hello, ${authProvider.name} 🤟",
-        //                     style: GoogleFonts.inter(
-        //                       fontSize: 24.sp,
-        //                       fontWeight: FontWeight.w600,
-        //                     ),
-        //                   ),
-        //                   CircleAvatar(radius: 20.r),
-        //                 ],
-        //               ),
-        //             ),
-        //             Padding(
-        //               padding: EdgeInsets.only(top: 2.h, left: 15.0.w),
-        //               child: Row(
-        //                 children: [
-        //                   Text(
-        //                     "${authProvider.role} ",
-        //                     style: GoogleFonts.roboto(
-        //                       fontSize: 18.sp,
-        //                       fontWeight: FontWeight.w600,
-        //                       color: Colors.black45,
-        //                     ),
-        //                   ),
-        //                 ],
-        //               ),
-        //             ),
-        //             Padding(
-        //               padding: EdgeInsets.symmetric(horizontal: 1.w),
-        //               child: Row(
-        //                 children: [
-        //                   Expanded(
-        //                     child: Row(
-        //                       children: [
-        //                         Flexible(child: CheckCard(text: "Check In")),
-        //                         CheckCard(text: "Check Out"),
-        //                       ],
-        //                     ),
-        //                   ),
-        //                 ],
-        //               ),
-        //             ),
-        //             Row(
-        //               children: [
-        //                 ElevatedButton(
-        //                   onPressed: () async {
-        //                     try {
-        //                       bool result = await attendanceProvider.checkIn(
-        //                         authProvider.user!.uid,
-        //                         authProvider.name!,
-        //                       );
-
-        //                       if (result) {
-        //                         ScaffoldMessenger.of(context).showSnackBar(
-        //                           SnackBar(
-        //                             content: Text("✅ Check In successful"),
-        //                           ),
-        //                         );
-        //                       } else {
-        //                         ScaffoldMessenger.of(context).showSnackBar(
-        //                           SnackBar(
-        //                             content: Text(
-        //                               "❌ You are not in the office location",
-        //                             ),
-        //                           ),
-        //                         );
-        //                       }
-        //                     } catch (e) {
-        //                       ScaffoldMessenger.of(context).showSnackBar(
-        //                         SnackBar(
-        //                           content: Text("🔥 Error: ${e.toString()}"),
-        //                         ),
-        //                       );
-        //                     }
-        //                   },
-        //                   child: Text("Check In"),
-        //                 ),
-        //               ],
-        //             ),
-        //           ],
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
       ),
     );
   }

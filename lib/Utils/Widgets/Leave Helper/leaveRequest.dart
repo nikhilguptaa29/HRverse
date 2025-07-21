@@ -23,18 +23,24 @@ class _LeaveRequestState extends State<LeaveRequest> {
     final String? userId = _auth.currentUser?.uid;
     final String? userName = await _authservices.getUserName(userId!);
     final String? managerName = await _authservices.getManagerName(userId);
+    final String? managerId = await _authservices.getManagerName(userId);
     final String? managerMail = await _authservices.getManagerMail(userId);
     final int? leaveCount = int.tryParse(totalLeaves.text);
+    final String fromDate = fromDateController.text;
+    final String toDate = toDateController.text;
     final errorMsg = await Provider.of<LeaveProvider>(
       context,
       listen: false,
     ).applyLeave(
       userId: userId,
+      managerId: managerId!,
       userName: userName!,
       managerName: managerName!,
       managerMail: managerMail!,
       leaveType: selectLeave!,
       leaveCount: leaveCount!,
+      fromDate: fromDate,
+      toDate: toDate,
     );
 
     if (errorMsg == null) {
@@ -43,7 +49,7 @@ class _LeaveRequestState extends State<LeaveRequest> {
       ).showSnackBar(SnackBar(content: Text("Leave Applied Successfully")));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("You are unable to apply Leave...")),
+        SnackBar(content: Text("You are unable to apply Leave... $errorMsg")),
       );
     }
   }
@@ -68,11 +74,11 @@ class _LeaveRequestState extends State<LeaveRequest> {
   ];
 
   String? selectLeaveDuration;
-  String? selectLeave;
+  String selectLeave = '';
   String? selectReason;
 
-  TextEditingController fromDate = TextEditingController();
-  TextEditingController toDate = TextEditingController();
+  TextEditingController fromDateController = TextEditingController();
+  TextEditingController toDateController = TextEditingController();
   TextEditingController totalLeaves = TextEditingController();
   TextEditingController remarksController = TextEditingController();
 
@@ -81,8 +87,8 @@ class _LeaveRequestState extends State<LeaveRequest> {
   final formatter = DateFormat('dd-MM-yyyy');
 
   void calculateLeaves() {
-    final dateFrom = formatter.parse(fromDate.text);
-    final dateTo = formatter.parse(toDate.text);
+    final dateFrom = formatter.parse(fromDateController.text);
+    final dateTo = formatter.parse(toDateController.text);
     int difference = dateTo.difference(dateFrom).inDays + 1;
     totalLeaves.text = difference.toString();
   }
@@ -90,8 +96,8 @@ class _LeaveRequestState extends State<LeaveRequest> {
   @override
   void initState() {
     super.initState();
-    fromDate.text = formatter.format(todayDate);
-    toDate.text = formatter.format(todayDate);
+    fromDateController.text = formatter.format(todayDate);
+    toDateController.text = formatter.format(todayDate);
     calculateLeaves();
   }
 
@@ -106,7 +112,7 @@ class _LeaveRequestState extends State<LeaveRequest> {
             backgroundColor: Colors.white,
             mode: CupertinoDatePickerMode.date,
             onDateTimeChanged: (DateTime newDate) {
-              fromDate.text = formatter.format(newDate);
+              fromDateController.text = formatter.format(newDate);
               calculateLeaves();
             },
           ),
@@ -126,7 +132,7 @@ class _LeaveRequestState extends State<LeaveRequest> {
             backgroundColor: Colors.white,
             mode: CupertinoDatePickerMode.date,
             onDateTimeChanged: (DateTime newDate) {
-              toDate.text = formatter.format(newDate);
+              toDateController.text = formatter.format(newDate);
               calculateLeaves();
             },
           ),
@@ -146,7 +152,11 @@ class _LeaveRequestState extends State<LeaveRequest> {
         width: 1.sw,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.pink.shade100,Colors.blue.shade200, Colors.purple.shade200],
+            colors: [
+              Colors.pink.shade100,
+              Colors.blue.shade200,
+              Colors.purple.shade200,
+            ],
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
           ),
@@ -168,7 +178,6 @@ class _LeaveRequestState extends State<LeaveRequest> {
                       decoration: fieldDecoration(),
                       dropdownColor: Colors.purple.shade50,
                       hint: Text("Select Leave"),
-                      value: selectLeave,
                       items:
                           leaveType.map((leaves) {
                             return DropdownMenuItem(
@@ -200,7 +209,7 @@ class _LeaveRequestState extends State<LeaveRequest> {
                           child: TextFormField(
                             readOnly: true,
                             onTap: fromdDatePicker,
-                            controller: fromDate,
+                            controller: fromDateController,
                             decoration: fieldDecoration(),
                           ),
                         ),
@@ -209,7 +218,7 @@ class _LeaveRequestState extends State<LeaveRequest> {
                           child: TextFormField(
                             readOnly: true,
                             onTap: toDatePicker,
-                            controller: toDate,
+                            controller: toDateController,
                             decoration: fieldDecoration(),
                           ),
                         ),
