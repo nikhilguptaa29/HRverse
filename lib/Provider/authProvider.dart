@@ -3,27 +3,35 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:hrverse/Services/Auth/authServices.dart';
+import 'package:local_auth/local_auth.dart';
 
 class Authprovider extends ChangeNotifier {
   final Authservices _authservices = Authservices();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final LocalAuthentication localAuth = LocalAuthentication();
 
   User? _user;
   String? _role;
   String? _name;
   String? _gender;
+  String? _designation;
   int _count = 0;
   List<Map<String, dynamic>> _userData = [];
   bool _isUserDetailFetch = false;
+  bool _isAuthenticate = false;
   StreamSubscription? _subscription;
 
   User? get user => _user;
   String? get role => _role;
+  String? get designation => _designation;
   String? get name => _name;
   String? get gender => _gender;
   int? get count => _count;
   bool get isAuth => _user != null;
+  bool get isAuthenticate => _isAuthenticate;
   bool get isUserDetailFetch => _isUserDetailFetch;
   List<Map<String, dynamic>> get userData => _userData;
 
@@ -39,6 +47,27 @@ class Authprovider extends ChangeNotifier {
   void stopSub() async {
     await _subscription?.cancel();
     _subscription = null;
+  }
+
+  Future<bool> biometricAuth() async {
+    try {
+      _isAuthenticate = await localAuth.authenticate(
+        localizedReason: "Authenticate for Check-In Successfully",
+        options: AuthenticationOptions(stickyAuth: true, useErrorDialogs: true),
+      );
+    } on PlatformException catch (e) {
+      if (e.code == auth_error.notEnrolled) {
+        // Add handling of no hardware here.
+      } else if (e.code == auth_error.lockedOut ||
+          e.code == auth_error.permanentlyLockedOut) {
+        // ...
+      } else {
+        // ...
+      }
+    } catch (e) {
+      throw Exception("$e");
+    }
+    return isAuthenticate;
   }
 
   Future<void> userDetail(String id) async {
@@ -121,6 +150,7 @@ class Authprovider extends ChangeNotifier {
       _role = await _authservices.getUserRole(_user!.uid);
       _name = await _authservices.getUserName(_user!.uid);
       _gender = await _authservices.getUserGender(_user!.uid);
+      _designation = await _authservices.getUserDesignation(_user!.uid);
       notifyListeners();
       return true;
     }
