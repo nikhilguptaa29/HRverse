@@ -54,6 +54,7 @@ dependencies:
   marquee: ^2.3.0
   shared_preferences: ^2.5.3
   local_auth: ^2.3.0
+  font_awesome_flutter: ^10.8.0
   # syncfusion_flutter_pdf: ^30.1.39
 
 dev_dependencies:

@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hrverse/Provider/attendanceProvider.dart';
 import 'package:hrverse/Provider/authProvider.dart';
 import 'package:hrverse/Provider/timerProvider.dart';
+import 'package:hrverse/Services/Auth/authServices.dart';
 import 'package:hrverse/Utils/Widgets/checkCard.dart';
 import 'package:provider/provider.dart';
 import 'package:swipeable_button_view/swipeable_button_view.dart';
@@ -36,7 +38,10 @@ class _EmployeeDashState extends State<EmployeeDash> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<Authprovider>(context, listen: false);
+    final Authservices authservices = Authservices();
     final timerProvider = Provider.of<Timerprovider>(context);
+    final userId = authProvider.user!.uid;
+    final userName = authservices.getUserName(userId);
     final attendanceProvider = Provider.of<AttendanceProvider>(
       context,
       listen: false,
@@ -115,7 +120,7 @@ class _EmployeeDashState extends State<EmployeeDash> {
             ),
             Positioned(
               top: 140.h,
-              child: Container(
+              child: SizedBox(
                 width: 1.sw,
                 child: Column(
                   children: [
@@ -132,6 +137,10 @@ class _EmployeeDashState extends State<EmployeeDash> {
                             onPressed: () async {
                               bool check = await authProvider.biometricAuth();
                               if (check) {
+                                attendanceProvider.checkIn(
+                                  userId,
+                                  await userName,
+                                );
                                 timerProv.setTimer();
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
@@ -146,10 +155,10 @@ class _EmployeeDashState extends State<EmployeeDash> {
                             },
                             child: Text("Check In"),
                           );
-                        
                         } else if (timerProv.showButton) {
                           return ElevatedButton(
-                            onPressed: () {
+                            onPressed: () async{
+                              attendanceProvider.checkOut(userId, await userName);
                               timerProv.onCheckOut();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text("Check-out")),
@@ -198,6 +207,7 @@ class _EmployeeDashState extends State<EmployeeDash> {
                         }
                       },
                     ),
+
                   ],
                 ),
               ),

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hrverse/Services/Attendance/attendanceServices.dart';
 import 'package:intl/intl.dart';
@@ -8,11 +9,30 @@ import 'package:intl/intl.dart';
 class AttendanceProvider extends ChangeNotifier {
   final AttendanceServices _attendanceServices = AttendanceServices();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  List<String> dropdownMonths = [];
+  String selectedMonth = '';
+
+  List<Map<String, String>> monthlyAttendance = [];
+  Map<int, String> monthNameMap = {
+    1: 'January',
+    2: 'February',
+    3: 'March',
+    4: 'April',
+    5: 'May',
+    6: 'June',
+    7: 'July',
+    8: 'August',
+    9: 'September',
+    10: 'October',
+    11: 'November',
+    12: 'December',
+  };
   String _checkInTime = '--:--';
   String _checkOutTime = '--:--';
-  String _date = DateFormat('dd-MM-yyyy').format(DateTime.now());
-  Duration _timeCheckIn = Duration.zero;
+  final String _date = DateFormat('dd-MM-yyyy').format(DateTime.now());
+  final Duration _timeCheckIn = Duration.zero;
   int _presentCount = 0;
   int _absentCount = 0;
   StreamSubscription? _subscription;
@@ -21,8 +41,8 @@ class AttendanceProvider extends ChangeNotifier {
   bool _isCheckOutStatus = false;
   bool _isCheckOut = false;
   bool _isCheckIn = false;
-  bool _checkInDone = false;
-  bool _canCheckOut = false;
+  final bool _checkInDone = false;
+  final bool _canCheckOut = false;
 
   String get checkInTime => _checkInTime;
   String get checkOutTime => _checkOutTime;
@@ -45,15 +65,42 @@ class AttendanceProvider extends ChangeNotifier {
     ) {
       _checkInTime = result['checkIn'] ?? '--:--';
       _checkOutTime = result['checkOut'] ?? '--:--';
-    notifyListeners();
+      notifyListeners();
     });
+  }
+
+  Future<void> loadAvailableMonths() async {
+    final userId = _auth.currentUser!.uid;
+    dropdownMonths = await _attendanceServices.getMonths(userId);
+    if (dropdownMonths.isNotEmpty && selectedMonth.isEmpty) {
+      selectedMonth = dropdownMonths.last;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchMonthlyAttendance(String month) async {
+    _isLoading = true;
+    notifyListeners();
+    final userId = _auth.currentUser!.uid;
+    monthlyAttendance = await _attendanceServices.getMonthlyAttedance(
+      userId,
+      month,
+    );
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  void upateSelectedMonth(String month) async {
+    selectedMonth = month;
+    await fetchMonthlyAttendance(month);
+    notifyListeners();
   }
 
   void dailyAttendanceCount() {
     String todayDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
 
     _firestore
-        .collection('Daily Attendance')
+        .collection('dailyAttendance')
         .doc(todayDate)
         .collection("Attendance")
         .snapshots()
@@ -119,19 +166,41 @@ class AttendanceProvider extends ChangeNotifier {
   Future<bool> checkIn(String userId, String userName) async {
     _isCheckInStatus = true;
     _isCheckIn = false;
+    notifyListeners();
 
     try {
       bool result = await _attendanceServices.checkIn(userId, userName);
       _isCheckIn = result;
 
       if (result) {
-        await _attendanceServices.todayAttendance(userId);
+        _attendanceServices.todayAttendance(userId);
         return true;
       }
     } catch (e) {
       throw Exception("Unable to check in :$e");
     }
     _isCheckInStatus = false;
+    notifyListeners();
+    return false;
+  }
+
+  Future<bool> checkOut(String userId, String userName) async {
+    _isCheckOutStatus = true;
+    _isCheckOut = false;
+    notifyListeners();
+
+    try {
+      bool result = await _attendanceServices.checkOut(userId, userName);
+      _isCheckOut = result;
+
+      if (result) {
+        _attendanceServices.todayAttendance(userId);
+        return true;
+      }
+    } catch (e) {
+      throw Exception("Unable to check out :$e");
+    }
+    _isCheckOutStatus = false;
     notifyListeners();
     return false;
   }

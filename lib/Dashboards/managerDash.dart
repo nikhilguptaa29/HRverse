@@ -89,7 +89,7 @@ class _ManagerDashState extends State<ManagerDash> {
                   child: SwipeableButtonView(
                     onFinish: () {},
                     onWaitingProcess: () {
-                      Future.delayed(Duration(seconds: 2));
+                      Future.delayed(Duration(seconds: 2),);
                       setState(() {
                         isFinished = true;
                       });
