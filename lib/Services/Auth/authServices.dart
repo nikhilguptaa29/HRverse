@@ -171,7 +171,7 @@ class Authservices {
     return snapshot.get("managerMail");
   }
 
-  Future<String?> getUserName(String userId) async {
+  Future<String> getUserName(String userId) async {
     DocumentSnapshot snapshot =
         await _firestore
             .collection("Employees")

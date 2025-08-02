@@ -15,7 +15,7 @@ class AttendanceServices {
   // 28.47764880548407, 77.06065759105084
   Future<bool> isWithInRadius(Position position) async {
     print("User location: ${position.latitude}, ${position.longitude}");
-    double distance = await Geolocator.distanceBetween(
+    double distance = Geolocator.distanceBetween(
       position.latitude,
       position.longitude,
       lat,
@@ -68,11 +68,12 @@ class AttendanceServices {
     }
     try {
       await _firestore
-          .collection("Daily Attendance")
+          .collection("dailyAttendance")
           .doc(todayDate)
           .collection("Attendance")
           .doc(userId)
           .set({
+            "Emp Id": userId,
             "Name": userName,
             "Check-In": {
               "Time": FieldValue.serverTimestamp(),
@@ -88,6 +89,103 @@ class AttendanceServices {
     }
   }
 
+  Future<List<String>> getMonths(String userId) async {
+    Set<String> months = {};
+    try {
+      QuerySnapshot snapshot =
+          await FirebaseFirestore.instance.collection("dailyAttendance").get();
+      print("No. of length: ${snapshot.docs.length}");
+
+      if (snapshot.docs.isEmpty) {
+        print("Data not found, Check name ");
+      } else {
+        for (var doc in snapshot.docs) {
+          String dateStr = doc.id;
+          print("Doc Id found: $dateStr");
+
+          DateTime date = DateFormat('dd-MM-yyyy').parse(dateStr);
+          String formatMonth = DateFormat('MMMM yyyy').format(date);
+          months.add(formatMonth);
+        }
+      }
+    } catch (e) {
+      print("Invalid month Format :$e");
+    }
+    List<String> sortMonth =
+        months.toList()..sort(
+          (a, b) => DateFormat(
+            'MMMM yyyy',
+          ).parse(a).compareTo(DateFormat('MMMM yyyy').parse(b)),
+        );
+
+    print("Final Months List: $sortMonth");
+    return sortMonth;
+  }
+
+  Future<List<Map<String, String>>> getMonthlyAttedance(
+    String userId,
+    String month,
+  ) async {
+    QuerySnapshot snapshot =
+        await _firestore.collection("dailyAttendance").get();
+    List<Map<String, String>> attendanceList = [];
+    for (var doc in snapshot.docs) {
+      String dateStr = doc.id;
+      try {
+        DateTime dt = DateFormat('dd-MM-yyyy').parse(dateStr);
+        if (DateFormat('MMMM yyyy').format(dt) == month) {
+          DocumentSnapshot userDoc =
+              await _firestore
+                  .collection("dailyAttendance")
+                  .doc(dateStr)
+                  .collection("Attendance")
+                  .doc(userId)
+                  .get();
+
+          if (userDoc.exists) {
+            final data = userDoc.data() as Map<String, dynamic>;
+
+            String checkIn = '--:--';
+            String checkOut = '--:--';
+            String total = '--:--';
+
+            if (data['Check-In']?['Time'] != null &&
+                data['Check-In']['Time'] is Timestamp) {
+              checkIn = DateFormat.Hm().format(
+                (data['Check-In']['Time'] as Timestamp).toDate(),
+              );
+            }
+            if (data['Check-Out']?['Time'] != null &&
+                data['Check-Out']['Time'] is Timestamp) {
+              checkOut = DateFormat.Hm().format(
+                (data['Check-Out']['Time'] as Timestamp).toDate(),
+              );
+
+              Duration difference = ((data['Check-Out']['Time'] as Timestamp)
+                      .toDate())
+                  .difference((data['Check-In']['Time'] as Timestamp).toDate());
+
+              total =
+                  '${difference.inHours.toString().padLeft(2, '0')}:${(difference.inMinutes % 60).toString().padLeft(2, '0')}';
+            }
+            attendanceList.add({
+              'date': dateStr,
+              'checkIn': checkIn,
+              'checkOut': checkOut,
+              'total': total,
+            });
+          }
+        }
+      } catch (_) {}
+    }
+    attendanceList.sort(
+      (a, b) => DateFormat(
+        'dd-MM-yyyy',
+      ).parse(a['date']!).compareTo(DateFormat('dd-MM-yyyy').parse(a['date']!)),
+    );
+    return attendanceList;
+  }
+
   Future<bool> checkOut(String userId, String userName) async {
     Position position = await Geolocator.getCurrentPosition();
     bool isWithinRadius = await isWithInRadius(position);
@@ -99,11 +197,12 @@ class AttendanceServices {
     }
     try {
       await _firestore
-          .collection("Daily Attendance")
+          .collection("dailyAttendance")
           .doc(todayDate)
           .collection("Attendance")
           .doc(userId)
           .set({
+            "Emp Id": userId,
             "Name": userName,
             "Check-Out": {
               "Time": FieldValue.serverTimestamp(),
@@ -123,7 +222,7 @@ class AttendanceServices {
     {
       String todayDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
       return _firestore
-          .collection("Daily Attendance")
+          .collection("dailyAttendance")
           .doc(todayDate)
           .collection("Attendance")
           .doc(userId)
