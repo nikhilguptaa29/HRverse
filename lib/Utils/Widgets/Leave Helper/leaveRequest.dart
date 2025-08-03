@@ -23,7 +23,7 @@ class _LeaveRequestState extends State<LeaveRequest> {
     final String? userId = _auth.currentUser?.uid;
     final String? userName = await _authservices.getUserName(userId!);
     final String? managerName = await _authservices.getManagerName(userId);
-    final String? managerId = await _authservices.getManagerName(userId);
+    final String? managerId = await _authservices.getEmpCode(userId);
     final String? managerMail = await _authservices.getManagerMail(userId);
     final int? leaveCount = int.tryParse(totalLeaves.text);
     final String fromDate = fromDateController.text;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hrverse/Provider/authProvider.dart';
 import 'package:hrverse/Dashboards/empDash.dart';
 import 'package:hrverse/Dashboards/managerDash.dart';
@@ -38,32 +39,36 @@ class _MainScreenState extends State<MainScreen> {
     final List<SalomonBottomBarItem> items = [
       SalomonBottomBarItem(
         icon: Icon(Icons.dashboard),
-        title: Text("Dashboard"),
+        title: Text("Dashboard", style: GoogleFonts.merriweather(fontSize: 12)),
       ),
       SalomonBottomBarItem(
         icon: Icon(Icons.trip_origin),
-        title: Text("Leaves"),
+        title: Text("Leaves", style: GoogleFonts.merriweather(fontSize: 12)),
       ),
       SalomonBottomBarItem(
         icon: Icon(Icons.description),
-        title: Text("Reports"),
+        title: Text("Reports", style: GoogleFonts.merriweather(fontSize: 12)),
       ),
-      SalomonBottomBarItem(icon: Icon(Icons.settings), title: Text("Settings")),
-      SalomonBottomBarItem(icon: Icon(Icons.person), title: Text("Profile")),
+      SalomonBottomBarItem(
+        icon: Icon(Icons.settings),
+        title: Text("Settings", style: GoogleFonts.merriweather(fontSize: 12)),
+      ),
+      SalomonBottomBarItem(
+        icon: Icon(Icons.person),
+        title: Text("Profile", style: GoogleFonts.merriweather(fontSize: 12)),
+      ),
     ];
     return Scaffold(
       body: screens[index],
-      bottomNavigationBar: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: SalomonBottomBar(
-          items: items,
-          currentIndex: index,
-          onTap: (value) {
-            setState(() {
-              index = value; 
-            });
-          },  
-        ),
+      bottomNavigationBar: SalomonBottomBar(
+        // backgroundColor: Colors.indigo.shade100,
+        items: items,
+        currentIndex: index,
+        onTap: (value) {
+          setState(() {
+            index = value;
+          });
+        },
       ),
     );
   }

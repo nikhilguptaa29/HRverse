@@ -81,7 +81,7 @@ class Authservices {
             "Email": email,
             "Pass": pass,
             "Role": role,
-            "Designation":designation,
+            "Designation": designation,
             "Date of Birth": dob,
             "Gender": gender,
             "reportingManager": manager,
@@ -143,6 +143,7 @@ class Authservices {
 
     return snapshot.get("Role");
   }
+
   Future<String?> getUserDesignation(String userId) async {
     DocumentSnapshot snapshot =
         await _firestore
@@ -160,6 +161,15 @@ class Authservices {
             .doc(FirebaseAuth.instance.currentUser!.uid)
             .get();
     return snapshot.get("reportingManager");
+  }
+
+  Future<String?> getEmpCode(String userId) async {
+    QuerySnapshot snapshot =
+        await _firestore
+            .collection("Employees")
+            .where('Role', isEqualTo: "Manager")
+            .get();
+            
   }
 
   Future<String?> getManagerMail(String userId) async {

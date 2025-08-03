@@ -67,8 +67,11 @@ class AttendanceServices {
       // throw Exception("Please mark your attendance from office location");
     }
     try {
+      await _firestore.collection("dailyAttendance").doc(todayDate).set({
+        "Name": userName,
+      }, SetOptions(merge: true));
       await _firestore
-          .collection("Daily Attendance")
+          .collection("dailyAttendance")
           .doc(todayDate)
           .collection("Attendance")
           .doc(userId)
@@ -98,8 +101,11 @@ class AttendanceServices {
       throw Exception("Please mark your attendance from office location");
     }
     try {
+      await _firestore.collection("dailyAttendance").doc(todayDate).set({
+        "Name": userName,
+      }, SetOptions(merge: true));
       await _firestore
-          .collection("Daily Attendance")
+          .collection("dailyAttendance")
           .doc(todayDate)
           .collection("Attendance")
           .doc(userId)
@@ -123,7 +129,7 @@ class AttendanceServices {
     {
       String todayDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
       return _firestore
-          .collection("Daily Attendance")
+          .collection("dailyAttendance")
           .doc(todayDate)
           .collection("Attendance")
           .doc(userId)

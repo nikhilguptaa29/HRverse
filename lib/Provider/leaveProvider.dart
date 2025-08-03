@@ -97,7 +97,7 @@ class LeaveProvider extends ChangeNotifier {
   Stream<List<Leaverequest>> leaveDetailUser(String userId) {
     return _firestore
         .collection('Leave Requests')
-        .where('empId', isEqualTo: userId).orderBy('timestamp',descending: true)
+        .where('empId', isEqualTo: userId).orderBy('timeStamp',descending: true)
         .snapshots()
         .map(
           (snaps) =>
